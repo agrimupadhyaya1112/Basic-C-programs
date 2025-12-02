@@ -1,0 +1,71 @@
+#!/bin/bash
+
+hospitals="hospitals.txt"
+patients="patients.txt"
+
+# Create hospital data file
+cat > $hospitals <<EOF
+Apollo Delhi 30 2500 4.8
+Fortis Mumbai 20 1800 4.5
+AIIMS Delhi 50 3000 5.0
+SunHospital Bhopal 15 1500 4.2
+Medanta Gurgaon 40 2700 4.9
+EOF
+
+# Create patient data file
+cat > $patients <<EOF
+Rahul 25 Fever
+Sneha 40 Diabetes
+Amit 60 HeartProblem
+EOF
+
+while true
+do
+    echo "------ Hospital Management System ------"
+    echo "1. Print Hospital Data"
+    echo "2. Print Patient Data"
+    echo "3. Sort by Bed Price"
+    echo "4. Sort by Available Beds"
+    echo "5. Sort by Name"
+    echo "6. Sort by Rating"
+    echo "7. Print Hospital of Specific City"
+    echo "0. Exit"
+    echo -n "Enter choice: "
+    read choice
+
+    case $choice in
+        1) echo "---- Hospital Data ----"
+           column -t $hospitals ;;
+        
+        2) echo "---- Patient Data ----"
+           column -t $patients ;;
+        
+        3) echo "---- Sorted by Bed Price ----"
+           sort -k4 -n $hospitals | column -t ;;
+        
+        4) echo "---- Sorted by Available Beds ----"
+           sort -k3 -n -r $hospitals | column -t ;;
+        
+        5) echo "---- Sorted by Name ----"
+           sort -k1 $hospitals | column -t ;;
+        
+        6) echo "---- Sorted by Rating ----"
+           sort -k5 -n -r $hospitals | column -t ;;
+        
+        7) echo -n "Enter city name: "
+           read city
+           echo "---- Hospitals in $city ----"
+           grep -i "$city" $hospitals | column -t ;;
+        
+        0) echo "Exiting..."
+           exit ;;
+        
+        *) echo "Invalid choice!" ;;
+    esac
+
+    echo -n "Do you want to continue? (y/n): "
+    read ans
+    if [ "$ans" != "y" ]; then
+        break
+    fi
+done
